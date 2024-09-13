@@ -93,6 +93,11 @@ def execute_order(ticker, position_size, side, limit_price, stop_price, take_pro
     buying_power = float(account.cash)
     estimated_order_cost = limit_price * position_size
 
+    # Ensure the trade is executed with cash only
+    if estimated_order_cost > buying_power:
+        print(f"Cannot place order for {ticker}. Estimated cost ${estimated_order_cost:.2f} exceeds available cash ${buying_power:.2f}.")
+        return False  # Order not placed
+
     # Check if the order exceeds the allocated budget
     if estimated_order_cost > allocated_budget:
         print(f"Cannot place order for {ticker}. Estimated cost ${estimated_order_cost:.2f} exceeds allocated budget of ${allocated_budget:.2f}.")
@@ -128,7 +133,11 @@ def execute_order(ticker, position_size, side, limit_price, stop_price, take_pro
         print(f"Placed {side} order for {position_size} shares of {ticker} at limit price {limit_price} with stop loss {stop_price} and take profit {take_profit_price}.")
 
         # Update the allocated budget after a successful trade
-        allocated_budget -= estimated_order_cost
+        if side == 'buy':
+            allocated_budget -= estimated_order_cost
+        elif side == 'sell':
+            allocated_budget += estimated_order_cost  # Add the amount back after selling
+
         print(f"New allocated budget: {allocated_budget:.2f}")
         return True  # Order placed successfully
     except Exception as e:
