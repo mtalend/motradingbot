@@ -85,7 +85,7 @@ def fixed_position_sizing(current_price, trade_amount=TRADE_AMOUNT):
     return max(int(position_size), 1)
 
 # Function to execute an order with proper bracket pricing and budget check
-def execute_order(ticker, position_size, side, limit_price, stop_price, take_profit_price):
+def execute_order(ticker, position_size, side, limit_price, stop_price, take_profit_price, is_short=False):
     global allocated_budget
 
     # Fetch account details and calculate buying power
@@ -99,9 +99,40 @@ def execute_order(ticker, position_size, side, limit_price, stop_price, take_pro
         return False  # Order not placed
 
     # Check if the order exceeds the allocated budget
-    if estimated_order_cost > allocated_budget:
-        print(f"Cannot place order for {ticker}. Estimated cost ${estimated_order_cost:.2f} exceeds allocated budget of ${allocated_budget:.2f}.")
-        return False  # Order not placed
+    # Update the allocated budget after a successful trade
+    if side == 'sell':  # This applies to both regular and short sells
+        if is_short:  # Short Sale logic
+            # Decrease allocated budget on short sell
+            if estimated_order_cost > allocated_budget:
+                print(f"Cannot short sell {ticker}. Estimated cost ${estimated_order_cost:.2f} exceeds allocated budget of ${allocated_budget:.2f}.")
+                return False # Order not placed
+            else:
+                # For short sell, subtract the cost from allocated_budget
+                allocated_budget -= estimated_order_cost
+                print(f"New allocated budget after short sell: ${allocated_budget:.2f}")
+        else:  # Regular Sell logic (closing a long position)
+            # Increase allocated budget by the sale amount for regular sell
+            allocated_budget += estimated_order_cost
+            print(f"New allocated budget after regular sell: ${allocated_budget:.2f}")
+
+    elif side == 'buy':  # This applies to both regular buy and buy to cover short
+        if is_short:  # Buy to cover short position
+            # Subtract the buy cost from allocated budget
+            if estimated_order_cost > allocated_budget:
+                print(f"Cannot cover short for {ticker}. Estimated cost ${estimated_order_cost:.2f} exceeds allocated budget of ${allocated_budget:.2f}.")
+                return False
+            else:
+                allocated_budget -= estimated_order_cost
+                print(f"New allocated budget after buying to cover short: ${allocated_budget:.2f}")
+        else:  # Regular Buy logic
+            # Subtract the cost of the buy from the allocated budget
+            if estimated_order_cost > allocated_budget:
+                print(f"Cannot buy {ticker}. Estimated cost ${estimated_order_cost:.2f} exceeds allocated budget of ${allocated_budget:.2f}.")
+                return False
+            else:
+                allocated_budget -= estimated_order_cost
+                print(f"New allocated budget after regular buy: ${allocated_budget:.2f}")
+
 
     try:
         # Adjust `take_profit_price` to ensure it meets Alpaca's requirements
@@ -131,14 +162,6 @@ def execute_order(ticker, position_size, side, limit_price, stop_price, take_pro
             take_profit={'limit_price': round(take_profit_price, 2)}
         )
         print(f"Placed {side} order for {position_size} shares of {ticker} at limit price {limit_price} with stop loss {stop_price} and take profit {take_profit_price}.")
-
-        # Update the allocated budget after a successful trade
-        if side == 'buy':
-            allocated_budget -= estimated_order_cost
-        elif side == 'sell':
-            allocated_budget += estimated_order_cost  # Add the amount back after selling
-
-        print(f"New allocated budget: {allocated_budget:.2f}")
         return True  # Order placed successfully
     except Exception as e:
         print(f"Error placing order for {ticker}: {e}")
