@@ -21,8 +21,8 @@ import yfinance as yf
 
 # Initialize Alpaca API client
 APCA_API_BASE_URL = 'https://paper-api.alpaca.markets'
-APCA_API_KEY_ID = 'PKBCIPB7MXR0SW45LV1J'
-APCA_API_SECRET_KEY = 'BLWIRKjmNiKVxKQr5hxbwW2DbZyrTav2ohCbTfbN'
+APCA_API_KEY_ID = 'PK8MVRB9DERDHF08RFLD'
+APCA_API_SECRET_KEY = 'cnsPQGJa4hV1GlNyqoxgHMlCtFfeztSmGJa2wkOd'
 api = tradeapi.REST(APCA_API_KEY_ID, APCA_API_SECRET_KEY, APCA_API_BASE_URL, api_version='v2')
 
 # Suppress TensorFlow warnings
@@ -31,7 +31,7 @@ warnings.filterwarnings('ignore', category=UserWarning, message='All PyTorch mod
 # Trading parameters
 STOP_LOSS_PERCENTAGE = 1.0  # 1% stop loss
 TAKE_PROFIT_PERCENTAGE = 1.0  # 1% take profit
-TRADE_AMOUNT = 100  # Fixed trade amount in USD
+TRADE_AMOUNT = 10000  # Fixed trade amount in USD
 CHECK_INTERVAL = 5  # Interval to check and execute trading logic in seconds
 
 allocated_budget = 500  # Allocated budget for trading
@@ -42,7 +42,7 @@ def fetch_stock_data(ticker, start_date='2020-01-01'):
     # Print the columns to check their names
     print("Available columns in fetched data:", df.columns)
     
-    # Add necessary indicators
+    # Add necessary indicatorss
     df['RSI'] = RSIIndicator(df['Close']).rsi()
     df['Stochastic'] = StochasticOscillator(df['High'], df['Low'], df['Close']).stoch()
     macd = MACD(df['Close'])
