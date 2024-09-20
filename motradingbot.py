@@ -18,21 +18,24 @@ import logging
 import argparse
 import yfinance as yf
 
+#sh-3.2# cp /Users/mtalend/gitrepo/motradingbot/motradingbot/motradingbot.py .
+#sh-3.2# python3 motradingbot.py --ticker AAPL
+
 
 # Initialize Alpaca API client
 APCA_API_BASE_URL = 'https://paper-api.alpaca.markets'
-APCA_API_KEY_ID = 'PK8MVRB9DERDHF08RFLD'
-APCA_API_SECRET_KEY = 'cnsPQGJa4hV1GlNyqoxgHMlCtFfeztSmGJa2wkOd'
+APCA_API_KEY_ID = 'PKRY3GJOB3CGOS6S9SO9'
+APCA_API_SECRET_KEY = 'y6CV8eXWMaDUmyGKlMUW95suOsuIYWeeHRcVaSLo'
 api = tradeapi.REST(APCA_API_KEY_ID, APCA_API_SECRET_KEY, APCA_API_BASE_URL, api_version='v2')
 
 # Suppress TensorFlow warnings
 warnings.filterwarnings('ignore', category=UserWarning, message='All PyTorch model weights were used')
 
 # Trading parameters
-STOP_LOSS_PERCENTAGE = 1.0  # 1% stop loss
-TAKE_PROFIT_PERCENTAGE = 1.0  # 1% take profit
-TRADE_AMOUNT = 10000  # Fixed trade amount in USD
-CHECK_INTERVAL = 5  # Interval to check and execute trading logic in seconds
+STOP_LOSS_PERCENTAGE = 2.0  # 1% stop loss
+TAKE_PROFIT_PERCENTAGE = 0.1  # 1% take profit
+TRADE_AMOUNT = 800  # Fixed trade amount in USD
+CHECK_INTERVAL = 15  # Interval to check and execute trading logic in seconds
 
 allocated_budget = 500  # Allocated budget for trading
 
@@ -169,7 +172,7 @@ def save_allocated_budget():
 # Initialize allocated budget (will be loaded from the file if it exists)
 allocated_budget = load_allocated_budget()
 
-## Function to execute an order with proper bracket pricing and budget check (Buy only, no short selling)
+# Function to execute an order with proper bracket pricing and budget check (Buy only, no short selling)
 def execute_order(ticker, position_size, limit_price, stop_price, take_profit_price, reason):
     global allocated_budget
 
@@ -192,7 +195,7 @@ def execute_order(ticker, position_size, limit_price, stop_price, take_profit_pr
         return False
 
     try:
-        # Attempt to submit the bracket order
+        # Submit the bracket order, using cash reserves only
         order = api.submit_order(
             symbol=ticker,
             qty=position_size,
@@ -202,9 +205,10 @@ def execute_order(ticker, position_size, limit_price, stop_price, take_profit_pr
             limit_price=round(limit_price, 2),
             order_class='bracket',
             stop_loss={'stop_price': round(stop_price, 2)},
-            take_profit={'limit_price': round(take_profit_price, 2)}
+            take_profit={'limit_price': round(take_profit_price, 2)},
+            extended_hours=False  # Ensure it's during regular hours
         )
-        
+
         log_message(f"Placed buy order for {position_size} shares of {ticker} at limit price ${limit_price:.2f} with stop loss ${stop_price:.2f} and take profit ${take_profit_price:.2f}.")
 
         # Adjust the allocated budget **only after** the order is successfully placed
@@ -269,12 +273,12 @@ def trading_logic(ticker):
 
     position_size = fixed_position_sizing(current_price, trade_amount=TRADE_AMOUNT)
 
-    # Fetch the account cash buying power
+    # Fetch the account cash buying power (use only cash, not margin)
     account = api.get_account()
-    allocated_budget = float(account.cash)  # Update the allocated budget with current cash
+    allocated_budget = float(account.cash)  # Use only the cash balance
 
     if allocated_budget < current_price * position_size:
-        print("Not enough buying power.")
+        print("Not enough buying power with cash reserves.")
         return
 
     # Determine stop-loss and take-profit prices
@@ -287,10 +291,9 @@ def trading_logic(ticker):
             print("Error: Take profit price must be greater than stop loss price.")
             return
 
-        # Execute buy order
+        # Execute buy order using cash only
         if execute_order(ticker, position_size, round(current_price * 1.01, 2), stop_loss_price, take_profit_price, "Model predicted BUY"):
             print(f"New allocated budget after buy: {allocated_budget:.2f}")
-
 
     # Handle all open orders to adjust or cancel as needed
     handle_open_orders()
@@ -349,7 +352,7 @@ def main():
     ticker = args.ticker
 
     # Schedule the trading logic to run periodically with the ticker argument
-    schedule.every(5).seconds.do(lambda: trading_logic(ticker))
+    schedule.every(15).seconds.do(lambda: trading_logic(ticker))
 
     # Keep running the schedule
     while True:
