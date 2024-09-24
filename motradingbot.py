@@ -9,7 +9,7 @@ import xgboost as xgb
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import LSTM, Dense, Input
 import alpaca_trade_api as tradeapi
-from ta.momentum import RSIIndicator, StochasticOscillator
+from ta.momentum import RSIIndicator, StochasticOscillator, ROCIndicator
 from ta.trend import MACD, EMAIndicator
 import warnings
 import json
@@ -17,6 +17,10 @@ import os
 import logging
 import argparse
 import yfinance as yf
+from ta.volatility import AverageTrueRange
+from ta.volume import AccDistIndexIndicator
+from ta.trend import PSARIndicator
+import talib
 
 #sh-3.2# cp /Users/mtalend/gitrepo/motradingbot/motradingbot/motradingbot.py .
 #sh-3.2# python3 motradingbot.py --ticker AAPL
@@ -24,20 +28,20 @@ import yfinance as yf
 
 # Initialize Alpaca API client
 APCA_API_BASE_URL = 'https://paper-api.alpaca.markets'
-APCA_API_KEY_ID = 'PKRY3GJOB3CGOS6S9SO9'
-APCA_API_SECRET_KEY = 'y6CV8eXWMaDUmyGKlMUW95suOsuIYWeeHRcVaSLo'
+APCA_API_KEY_ID = 'PKD7BFCKE1D04VJ1QICH'
+APCA_API_SECRET_KEY = 'DFrUmU6vSokQTaCgyQleS8eLgKxsNDG3icgb7OoS'
 api = tradeapi.REST(APCA_API_KEY_ID, APCA_API_SECRET_KEY, APCA_API_BASE_URL, api_version='v2')
 
 # Suppress TensorFlow warnings
 warnings.filterwarnings('ignore', category=UserWarning, message='All PyTorch model weights were used')
 
 # Trading parameters
-STOP_LOSS_PERCENTAGE = 2.0  # 1% stop loss
-TAKE_PROFIT_PERCENTAGE = 0.1  # 1% take profit
-TRADE_AMOUNT = 800  # Fixed trade amount in USD
+STOP_LOSS_PERCENTAGE = 10.0  # 1% stop loss
+TAKE_PROFIT_PERCENTAGE = 0.01  # 1% take profit
+TRADE_AMOUNT = 1000  # Fixed trade amount in USD
 CHECK_INTERVAL = 15  # Interval to check and execute trading logic in seconds
 
-allocated_budget = 500  # Allocated budget for trading
+#allocated_budget = 1000  # Allocated budget for trading
 
 def fetch_stock_data(ticker, start_date='2020-01-01'):
     df = yf.download(ticker, start=start_date)
@@ -52,16 +56,22 @@ def fetch_stock_data(ticker, start_date='2020-01-01'):
     df['MACD'] = macd.macd()
     df['MACD_Signal'] = macd.macd_signal()
     df['EMA'] = EMAIndicator(df['Close'], window=20).ema_indicator()
+    df['ATR'] = AverageTrueRange(df['High'], df['Low'], df['Close']).average_true_range()
+    df['ROC'] = ROCIndicator(df['Close']).roc()
+    df['OBV'] = talib.OBV(df['Close'], df['Volume'])
+    df['AccDist'] = AccDistIndexIndicator(df['High'], df['Low'], df['Close'], df['Volume']).acc_dist_index()
+    psar = PSARIndicator(df['High'], df['Low'], df['Close'])
+    df['PSAR'] = psar.psar()
     
     # Ensure the columns used are consistent
-    if not all(col in df.columns for col in ['Close', 'RSI', 'Stochastic', 'MACD', 'MACD_Signal', 'EMA']):
+    if not all(col in df.columns for col in ['Close', 'RSI', 'Stochastic', 'MACD', 'MACD_Signal', 'EMA', 'ATR', 'ROC', 'OBV', 'AccDist', 'PSAR']):
         print("Error: Missing required columns for feature extraction.")
 
     return df
 
 def preprocess_data(df):
     df = df.dropna()
-    features = df[['Close', 'RSI', 'Stochastic', 'MACD', 'MACD_Signal', 'EMA']].values
+    features = df[['Close', 'RSI', 'Stochastic', 'MACD', 'MACD_Signal', 'EMA', 'ATR', 'ROC', 'OBV', 'AccDist', 'PSAR']].values
     target = np.sign(df['Close'].diff().shift(-1)).dropna().values
     target = np.where(target == -1, 0, 1)
     if len(features) != len(target):
@@ -106,7 +116,13 @@ def DownloadStockdatafromYfinance(ticker, start_date='2018-01-01'):
     df['MACD'] = macd.macd()
     df['MACD_Signal'] = macd.macd_signal()
     df['EMA'] = EMAIndicator(df['Close'], window=20).ema_indicator()
-    
+    df['ATR'] = AverageTrueRange(df['High'], df['Low'], df['Close']).average_true_range()
+    df['ROC'] = ROCIndicator(df['Close']).roc()
+    df['OBV'] = talib.OBV(df['Close'], df['Volume'])
+    df['AccDist'] = AccDistIndexIndicator(df['High'], df['Low'], df['Close'], df['Volume']).acc_dist_index()
+    psar = PSARIndicator(df['High'], df['Low'], df['Close'])
+    df['PSAR'] = psar.psar()
+
     # Save the stock data to a CSV file for future reference
     df.to_csv(f"{ticker}_sample_stock_data.csv")
     print(f"Downloaded and saved stock data for {ticker} to {ticker}_sample_stock_data.csv")
@@ -116,13 +132,26 @@ def load_sample_data_from_csv(file_path):
     try:
         df = pd.read_csv(file_path)
         df = df.dropna()
-        features = df[['Close', 'RSI', 'Stochastic', 'MACD', 'MACD_Signal', 'EMA']].values
-        if features.shape[0] == 0 or features.shape[1] != 6:
-            raise ValueError("The sample data from CSV is either empty or does not have the required columns.")
+        
+        # Check if all required columns are present
+        required_columns = ['Close', 'RSI', 'Stochastic', 'MACD', 'MACD_Signal', 'EMA', 'ATR', 'ROC', 'OBV', 'AccDist', 'PSAR']
+        
+        # Ensure the required columns exist in the CSV
+        missing_columns = [col for col in required_columns if col not in df.columns]
+        if missing_columns:
+            raise ValueError(f"Missing columns in CSV data: {missing_columns}")
+        
+        # Extract features
+        features = df[required_columns].values
+        
+        if features.shape[0] == 0:
+            raise ValueError("The sample data from CSV is empty.")
+        
         return features
     except Exception as e:
         print(f"Error loading sample data from CSV: {e}")
         return None
+
 
 def fetch_stock_data_with_volume_and_trends(ticker):
     # Fetch historical stock data
@@ -153,24 +182,64 @@ def fixed_position_sizing(current_price, trade_amount=TRADE_AMOUNT):
     position_size = trade_amount // current_price
     return max(int(position_size), 1)
 
-# File to store allocated budget
 BUDGET_FILE = 'allocated_budget.json'
 
-# Function to load the allocated budget from a file
-def load_allocated_budget():
+# Define the maximum allocated budget
+MAX_ALLOCATED_BUDGET = 1000.0
+# Define the cash threshold and maximum amount to add
+CASH_THRESHOLD = 25000
+MAX_AMOUNT_TO_ADD = 1000
+
+def save_allocated_budget(budget):
+    """Save the allocated budget to a JSON file, ensuring it does not exceed the maximum limit."""
+    budget = min(budget, MAX_ALLOCATED_BUDGET)  # Cap the budget to MAX_ALLOCATED_BUDGET
+    with open(BUDGET_FILE, 'w') as f:
+        json.dump({'allocated_budget': budget}, f)
+
+def load_allocated_budget(default_budget):
+    """Load the allocated budget from a JSON file, or use a default value if the file doesn't exist."""
     if os.path.exists(BUDGET_FILE):
-        with open(BUDGET_FILE, 'r') as file:
-            data = json.load(file)
-            return data.get('allocated_budget', 500)  # Default to 500 if file is empty or key doesn't exist
-    return 500  # Default budget if file doesn't exist
+        with open(BUDGET_FILE, 'r') as f:
+            data = json.load(f)
+            return min(data.get('allocated_budget', default_budget), MAX_ALLOCATED_BUDGET)
+    return default_budget
 
-# Function to save the allocated budget to a file
-def save_allocated_budget():
-    with open(BUDGET_FILE, 'w') as file:
-        json.dump({'allocated_budget': allocated_budget}, file)
+# Initialize allocated budget with default or from saved file
+default_budget = 1000  # Set your default trading budget here
+allocated_budget = load_allocated_budget(default_budget)  # Allocated budget for trading
+print(f"Allocated budget loaded: ${allocated_budget:.2f}")
 
-# Initialize allocated budget (will be loaded from the file if it exists)
-allocated_budget = load_allocated_budget()
+def update_allocated_budget_with_excess():
+    global allocated_budget
+
+    try:
+        # Fetch the current cash balance from the Alpaca account
+        account = api.get_account()
+        cash_balance = float(account.cash)  # Get the cash balance as a float
+
+        # Check if the cash balance exceeds the defined threshold
+        if cash_balance > CASH_THRESHOLD:
+            excess_amount = cash_balance - CASH_THRESHOLD
+
+            # Cap the excess amount to be added
+            amount_to_add = min(excess_amount, MAX_AMOUNT_TO_ADD)
+
+            # Update the allocated budget by adding the capped amount
+            if allocated_budget + amount_to_add <= MAX_ALLOCATED_BUDGET:
+                allocated_budget += amount_to_add
+                log_message(f"Cash balance exceeded ${CASH_THRESHOLD}. Excess of ${amount_to_add:.2f} added to allocated budget.")
+                log_message(f"Excess cash of ${amount_to_add:.2f} added to allocated budget. New budget: ${allocated_budget:.2f}")
+                print(f"Excess of ${amount_to_add:.2f} added to allocated budget. New allocated budget: ${allocated_budget:.2f}")
+            else:
+                log_message(f"Adding excess amount would exceed max allocated budget. Keeping it at ${MAX_ALLOCATED_BUDGET:.2f}.")
+                allocated_budget = MAX_ALLOCATED_BUDGET
+
+        # Save the updated allocated budget to a file
+        save_allocated_budget(allocated_budget)
+
+    except Exception as e:
+        log_message(f"Error updating allocated budget with excess cash: {e}")
+        print(f"Error updating allocated budget with excess cash: {e}")
 
 # Function to execute an order with proper bracket pricing and budget check (Buy only, no short selling)
 def execute_order(ticker, position_size, limit_price, stop_price, take_profit_price, reason):
@@ -215,8 +284,9 @@ def execute_order(ticker, position_size, limit_price, stop_price, take_profit_pr
         allocated_budget -= estimated_order_cost
         log_message(f"New allocated budget after buy: ${allocated_budget:.2f}")
 
-        # Save the updated budget after a successful order
-        save_allocated_budget()
+        # Save the updated allocated budget to a file
+        save_allocated_budget(allocated_budget)
+        log_message(f"Placed order for {ticker}, remaining budget: ${allocated_budget:.2f}")
 
         return True  # Order placed successfully
 
@@ -228,6 +298,9 @@ def execute_order(ticker, position_size, limit_price, stop_price, take_profit_pr
 # Function to apply trading logic
 def trading_logic(ticker):
     global allocated_budget
+
+    # Update the allocated budget if cash balance exceeds $25,000
+    update_allocated_budget_with_excess()
 
     # Fetch stock data and pre-process it
     stock_data = fetch_stock_data_with_volume_and_trends(ticker)
@@ -251,8 +324,7 @@ def trading_logic(ticker):
     # Predict with each model
     rf_prediction = rf_model.predict(latest_features)
     xgb_prediction = xgb_model.predict(latest_features)
-    lstm_prediction = lstm_model.predict(latest_features.reshape((latest_features.shape[0], latest_features.shape[1], 1)))
-    lstm_prediction = np.round(lstm_prediction).astype(int).flatten()
+    lstm_prediction = np.round(lstm_model.predict(latest_features.reshape((latest_features.shape[0], latest_features.shape[1], 1)))).astype(int).flatten()
 
     print(f"Model Predictions - RF: {rf_prediction}, XGB: {xgb_prediction}, LSTM: {lstm_prediction}")
 
@@ -294,25 +366,6 @@ def trading_logic(ticker):
         # Execute buy order using cash only
         if execute_order(ticker, position_size, round(current_price * 1.01, 2), stop_loss_price, take_profit_price, "Model predicted BUY"):
             print(f"New allocated budget after buy: {allocated_budget:.2f}")
-
-    # Handle all open orders to adjust or cancel as needed
-    handle_open_orders()
-
-def handle_open_orders():
-    """
-    Function to handle open orders (e.g., cancel, adjust) and log them.
-    """
-    try:
-        open_orders = api.list_orders(status='open')
-        if not open_orders:
-            log_message("No open orders to handle.")
-        for order in open_orders:
-            log_message(f"Handling open order: {order.id}, symbol: {order.symbol}, qty: {order.qty}, side: {order.side}")
-            # Example of cancellation logic (if required)
-            # api.cancel_order(order.id)
-            log_message(f"Order {order.id} handled.")
-    except Exception as e:
-        log_message(f"Error handling open orders: {e}")
 
 # Main function
 def main():

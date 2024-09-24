@@ -1,0 +1,262 @@
+2024-09-23 10:42:26 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 10:42:46 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 10:43:06 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 10:43:27 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 10:43:47 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 10:50:29 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 10:50:51 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 10:50:57 - INFO - Decision: BUY 4 shares of AAPL. Reason: Model predicted BUY
+2024-09-23 10:50:57 - INFO - Placed buy order for 4 shares of AAPL at limit price $229.13 with stop loss $136.80 and take profit $229.14.
+2024-09-23 10:50:57 - INFO - New allocated budget after buy: $25083.48
+2024-09-23 10:51:12 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 10:51:34 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 10:51:56 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 10:52:05 - INFO - Decision: BUY 4 shares of AAPL. Reason: Model predicted BUY
+2024-09-23 10:52:05 - INFO - Placed buy order for 4 shares of AAPL at limit price $229.08 with stop loss $136.81 and take profit $229.09.
+2024-09-23 10:52:05 - INFO - New allocated budget after buy: $24176.14
+2024-09-23 10:52:51 - INFO - Decision: BUY 4 shares of AAPL. Reason: Model predicted BUY
+2024-09-23 10:52:51 - INFO - Placed buy order for 4 shares of AAPL at limit price $229.11 with stop loss $136.80 and take profit $229.12.
+2024-09-23 10:52:51 - INFO - New allocated budget after buy: $23268.66
+2024-09-23 11:00:21 - INFO - Decision: BUY 4 shares of AAPL. Reason: Model predicted BUY
+2024-09-23 11:00:21 - INFO - Placed buy order for 4 shares of AAPL at limit price $229.45 with stop loss $136.76 and take profit $229.46.
+2024-09-23 11:00:21 - INFO - New allocated budget after buy: $22359.93
+2024-09-23 11:13:59 - INFO - Decision: BUY 4 shares of AAPL. Reason: Model predicted BUY
+2024-09-23 11:13:59 - INFO - Placed buy order for 4 shares of AAPL at limit price $229.07 with stop loss $136.82 and take profit $229.08.
+2024-09-23 11:13:59 - INFO - New allocated budget after buy: $21452.93
+2024-09-23 11:16:11 - INFO - Decision: BUY 4 shares of AAPL. Reason: Model predicted BUY
+2024-09-23 11:16:11 - INFO - Placed buy order for 4 shares of AAPL at limit price $229.09 with stop loss $136.80 and take profit $229.10.
+2024-09-23 11:16:11 - INFO - New allocated budget after buy: $20545.66
+2024-09-23 11:17:40 - INFO - Decision: BUY 4 shares of AAPL. Reason: Model predicted BUY
+2024-09-23 11:17:41 - INFO - Placed buy order for 4 shares of AAPL at limit price $229.03 with stop loss $136.81 and take profit $229.04.
+2024-09-23 11:17:41 - INFO - New allocated budget after buy: $19638.54
+2024-09-23 11:25:07 - INFO - Decision: BUY 4 shares of AAPL. Reason: Model predicted BUY
+2024-09-23 11:25:07 - INFO - Placed buy order for 4 shares of AAPL at limit price $229.08 with stop loss $136.80 and take profit $229.09.
+2024-09-23 11:25:07 - INFO - New allocated budget after buy: $18731.10
+2024-09-23 11:29:13 - INFO - Decision: BUY 4 shares of AAPL. Reason: Model predicted BUY
+2024-09-23 11:29:13 - INFO - Placed buy order for 4 shares of AAPL at limit price $229.01 with stop loss $136.86 and take profit $229.02.
+2024-09-23 11:29:13 - INFO - New allocated budget after buy: $17823.90
+2024-09-23 11:38:42 - INFO - Decision: BUY 4 shares of AAPL. Reason: Model predicted BUY
+2024-09-23 11:38:42 - INFO - Placed buy order for 4 shares of AAPL at limit price $228.97 with stop loss $136.83 and take profit $228.98.
+2024-09-23 11:38:42 - INFO - New allocated budget after buy: $16917.29
+2024-09-23 11:45:39 - INFO - Decision: BUY 4 shares of AAPL. Reason: Model predicted BUY
+2024-09-23 11:45:39 - INFO - Placed buy order for 4 shares of AAPL at limit price $228.88 with stop loss $136.88 and take profit $228.89.
+2024-09-23 11:45:39 - INFO - New allocated budget after buy: $16010.81
+2024-09-23 11:46:24 - INFO - Decision: BUY 4 shares of AAPL. Reason: Model predicted BUY
+2024-09-23 11:46:24 - INFO - Placed buy order for 4 shares of AAPL at limit price $228.93 with stop loss $136.70 and take profit $228.94.
+2024-09-23 11:46:24 - INFO - New allocated budget after buy: $15104.25
+2024-09-23 11:47:32 - INFO - Decision: BUY 4 shares of AAPL. Reason: Model predicted BUY
+2024-09-23 11:47:32 - INFO - Placed buy order for 4 shares of AAPL at limit price $228.88 with stop loss $136.88 and take profit $228.89.
+2024-09-23 11:47:32 - INFO - New allocated budget after buy: $14197.77
+2024-09-23 11:49:40 - INFO - Decision: BUY 4 shares of AAPL. Reason: Model predicted BUY
+2024-09-23 11:49:40 - INFO - Placed buy order for 4 shares of AAPL at limit price $228.91 with stop loss $136.87 and take profit $228.92.
+2024-09-23 11:49:40 - INFO - New allocated budget after buy: $13291.21
+2024-09-23 11:51:52 - INFO - Decision: BUY 4 shares of AAPL. Reason: Model predicted BUY
+2024-09-23 11:51:52 - INFO - Placed buy order for 4 shares of AAPL at limit price $228.94 with stop loss $136.89 and take profit $228.95.
+2024-09-23 11:51:52 - INFO - New allocated budget after buy: $12384.65
+2024-09-23 11:55:08 - INFO - Decision: BUY 4 shares of AAPL. Reason: Model predicted BUY
+2024-09-23 11:55:08 - INFO - Placed buy order for 4 shares of AAPL at limit price $228.93 with stop loss $136.85 and take profit $228.94.
+2024-09-23 11:55:08 - INFO - New allocated budget after buy: $11477.93
+2024-09-23 11:56:13 - INFO - Decision: BUY 4 shares of AAPL. Reason: Model predicted BUY
+2024-09-23 11:56:13 - INFO - Placed buy order for 4 shares of AAPL at limit price $228.93 with stop loss $136.86 and take profit $228.94.
+2024-09-23 11:56:13 - INFO - New allocated budget after buy: $10571.29
+2024-09-23 12:07:34 - INFO - Decision: BUY 4 shares of AAPL. Reason: Model predicted BUY
+2024-09-23 12:07:34 - INFO - Placed buy order for 4 shares of AAPL at limit price $228.75 with stop loss $136.92 and take profit $228.76.
+2024-09-23 12:07:34 - INFO - New allocated budget after buy: $9665.21
+2024-09-23 12:09:43 - INFO - Decision: BUY 4 shares of AAPL. Reason: Model predicted BUY
+2024-09-23 12:09:43 - INFO - Placed buy order for 4 shares of AAPL at limit price $228.69 with stop loss $136.90 and take profit $228.70.
+2024-09-23 12:09:43 - INFO - New allocated budget after buy: $8759.45
+2024-09-23 12:11:34 - INFO - Decision: BUY 4 shares of AAPL. Reason: Model predicted BUY
+2024-09-23 12:11:34 - INFO - Placed buy order for 4 shares of AAPL at limit price $228.60 with stop loss $136.95 and take profit $228.61.
+2024-09-23 12:11:34 - INFO - New allocated budget after buy: $7854.17
+2024-09-23 12:20:14 - INFO - Decision: BUY 4 shares of AAPL. Reason: Model predicted BUY
+2024-09-23 12:20:14 - INFO - Placed buy order for 4 shares of AAPL at limit price $228.60 with stop loss $136.93 and take profit $228.61.
+2024-09-23 12:20:14 - INFO - New allocated budget after buy: $6948.77
+2024-09-23 12:21:17 - INFO - Decision: BUY 4 shares of AAPL. Reason: Model predicted BUY
+2024-09-23 12:21:17 - INFO - Placed buy order for 4 shares of AAPL at limit price $228.45 with stop loss $136.97 and take profit $228.46.
+2024-09-23 12:21:17 - INFO - New allocated budget after buy: $6043.97
+2024-09-23 12:22:00 - INFO - Decision: BUY 4 shares of AAPL. Reason: Model predicted BUY
+2024-09-23 12:22:00 - INFO - Placed buy order for 4 shares of AAPL at limit price $228.47 with stop loss $136.94 and take profit $228.48.
+2024-09-23 12:22:00 - INFO - New allocated budget after buy: $5139.29
+2024-09-23 12:25:41 - INFO - Decision: BUY 4 shares of AAPL. Reason: Model predicted BUY
+2024-09-23 12:25:41 - INFO - Placed buy order for 4 shares of AAPL at limit price $228.46 with stop loss $136.98 and take profit $228.47.
+2024-09-23 12:25:41 - INFO - New allocated budget after buy: $4234.41
+2024-09-23 12:27:48 - INFO - Decision: BUY 4 shares of AAPL. Reason: Model predicted BUY
+2024-09-23 12:27:48 - INFO - Placed buy order for 4 shares of AAPL at limit price $228.48 with stop loss $136.93 and take profit $228.49.
+2024-09-23 12:27:48 - INFO - New allocated budget after buy: $3329.37
+2024-09-23 12:30:17 - INFO - Decision: BUY 4 shares of AAPL. Reason: Model predicted BUY
+2024-09-23 12:30:17 - INFO - Placed buy order for 4 shares of AAPL at limit price $228.50 with stop loss $136.93 and take profit $228.51.
+2024-09-23 12:30:17 - INFO - New allocated budget after buy: $2424.28
+2024-09-23 12:33:30 - INFO - Decision: BUY 4 shares of AAPL. Reason: Model predicted BUY
+2024-09-23 12:33:30 - INFO - Placed buy order for 4 shares of AAPL at limit price $228.68 with stop loss $136.94 and take profit $228.69.
+2024-09-23 12:33:30 - INFO - New allocated budget after buy: $1518.44
+2024-09-23 12:35:39 - INFO - Decision: BUY 4 shares of AAPL. Reason: Model predicted BUY
+2024-09-23 12:35:39 - INFO - Placed buy order for 4 shares of AAPL at limit price $228.81 with stop loss $136.91 and take profit $228.82.
+2024-09-23 12:35:39 - INFO - New allocated budget after buy: $612.20
+2024-09-23 12:53:31 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 12:53:53 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 12:54:14 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 12:54:35 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 12:54:56 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 12:55:17 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 12:55:39 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 12:56:01 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 12:56:22 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 12:56:43 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 12:57:04 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 12:57:26 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 12:57:47 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 12:58:08 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 12:58:15 - INFO - Decision: BUY 4 shares of AAPL. Reason: Model predicted BUY
+2024-09-23 12:58:15 - INFO - Placed buy order for 4 shares of AAPL at limit price $228.65 with stop loss $136.84 and take profit $228.66.
+2024-09-23 12:58:15 - INFO - New allocated budget after buy: $26085.40
+2024-09-23 12:58:15 - INFO - Placed order for AAPL, remaining budget: $26085.40
+2024-09-23 12:58:30 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 12:58:51 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 12:59:11 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 12:59:34 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 12:59:54 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:00:15 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:00:36 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:00:56 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:01:16 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:01:37 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:01:58 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:02:18 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:02:40 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:03:01 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:03:21 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:03:42 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:04:03 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:04:24 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:04:44 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:05:07 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:05:27 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:05:48 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:06:08 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:06:29 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:06:50 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:07:11 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:07:31 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:07:52 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:08:13 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:08:33 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:08:54 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:09:14 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:09:35 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:09:56 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:10:18 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:10:45 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:11:05 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:11:25 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:11:45 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:12:05 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:12:25 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:12:46 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:13:06 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:13:26 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:13:47 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:14:08 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:14:13 - INFO - Decision: BUY 4 shares of AAPL. Reason: Model predicted BUY
+2024-09-23 13:14:13 - INFO - Placed buy order for 4 shares of AAPL at limit price $228.75 with stop loss $136.92 and take profit $228.76.
+2024-09-23 13:14:13 - INFO - New allocated budget after buy: $25179.52
+2024-09-23 13:14:13 - INFO - Placed order for AAPL, remaining budget: $25179.52
+2024-09-23 13:14:29 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:14:49 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:15:09 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:15:30 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:15:50 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:16:10 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:16:31 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:16:52 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:17:12 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:17:32 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:17:53 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:18:13 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:18:41 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:19:02 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:19:22 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:19:28 - INFO - Decision: BUY 4 shares of AAPL. Reason: Model predicted BUY
+2024-09-23 13:19:28 - INFO - Placed buy order for 4 shares of AAPL at limit price $228.75 with stop loss $136.92 and take profit $228.76.
+2024-09-23 13:19:28 - INFO - New allocated budget after buy: $25179.52
+2024-09-23 13:19:28 - INFO - Placed order for AAPL, remaining budget: $25179.52
+2024-09-23 13:19:43 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:20:04 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:20:24 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:20:44 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:20:50 - INFO - Decision: BUY 4 shares of AAPL. Reason: Model predicted BUY
+2024-09-23 13:20:50 - INFO - Placed buy order for 4 shares of AAPL at limit price $228.75 with stop loss $136.92 and take profit $228.76.
+2024-09-23 13:20:50 - INFO - New allocated budget after buy: $25179.52
+2024-09-23 13:20:50 - INFO - Placed order for AAPL, remaining budget: $25179.52
+2024-09-23 13:21:05 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:21:25 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:21:46 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:22:06 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:22:26 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:22:48 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:23:08 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:23:29 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:23:51 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:24:12 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:24:34 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:24:55 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:25:15 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:25:40 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:26:03 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:26:24 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:26:29 - INFO - Decision: BUY 4 shares of AAPL. Reason: Model predicted BUY
+2024-09-23 13:26:29 - INFO - Placed buy order for 4 shares of AAPL at limit price $228.75 with stop loss $136.92 and take profit $228.76.
+2024-09-23 13:26:29 - INFO - New allocated budget after buy: $25179.52
+2024-09-23 13:26:29 - INFO - Placed order for AAPL, remaining budget: $25179.52
+2024-09-23 13:26:44 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:27:05 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:27:27 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:27:48 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:28:08 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:28:28 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:28:49 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:29:09 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:29:29 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:29:50 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:30:10 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:30:18 - INFO - Decision: BUY 4 shares of AAPL. Reason: Model predicted BUY
+2024-09-23 13:30:18 - INFO - Placed buy order for 4 shares of AAPL at limit price $228.75 with stop loss $136.92 and take profit $228.76.
+2024-09-23 13:30:18 - INFO - New allocated budget after buy: $25179.52
+2024-09-23 13:30:18 - INFO - Placed order for AAPL, remaining budget: $25179.52
+2024-09-23 13:30:33 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:30:54 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:31:14 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:31:34 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:31:55 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:32:15 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:32:36 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:32:56 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:33:16 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:33:39 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:33:44 - INFO - Decision: BUY 4 shares of AAPL. Reason: Model predicted BUY
+2024-09-23 13:33:44 - INFO - Placed buy order for 4 shares of AAPL at limit price $228.75 with stop loss $136.92 and take profit $228.76.
+2024-09-23 13:33:44 - INFO - New allocated budget after buy: $25179.52
+2024-09-23 13:33:44 - INFO - Placed order for AAPL, remaining budget: $25179.52
+2024-09-23 13:34:00 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:34:20 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:34:42 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:35:04 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:35:24 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:35:44 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:35:50 - INFO - Decision: BUY 4 shares of AAPL. Reason: Model predicted BUY
+2024-09-23 13:35:50 - INFO - Placed buy order for 4 shares of AAPL at limit price $228.75 with stop loss $136.92 and take profit $228.76.
+2024-09-23 13:35:50 - INFO - New allocated budget after buy: $25179.52
+2024-09-23 13:35:50 - INFO - Placed order for AAPL, remaining budget: $25179.52
+2024-09-23 13:36:05 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:36:25 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:36:45 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:37:06 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:37:26 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:37:49 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:38:10 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:38:30 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:38:51 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:39:11 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:39:31 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:39:51 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:40:13 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
+2024-09-23 13:40:34 - INFO - Adding excess amount would exceed max allocated budget. Keeping it at $1000.00.
