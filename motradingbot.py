@@ -3,9 +3,12 @@ import pandas as pd
 import yfinance as yf
 import schedule
 import time
-from datetime import datetime
+from datetime import datetime, timedelta 
+import pytz
+import sys
 from sklearn.ensemble import RandomForestClassifier
 import xgboost as xgb
+import tensorflow as tf
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import LSTM, Dense, Input
 import alpaca_trade_api as tradeapi
@@ -28,20 +31,39 @@ import talib
 
 # Initialize Alpaca API client
 APCA_API_BASE_URL = 'https://paper-api.alpaca.markets'
-APCA_API_KEY_ID = 'PKD7BFCKE1D04VJ1QICH'
-APCA_API_SECRET_KEY = 'DFrUmU6vSokQTaCgyQleS8eLgKxsNDG3icgb7OoS'
+APCA_API_KEY_ID = 'PKJYJD4WF771JIO8C4YL'
+APCA_API_SECRET_KEY = 'zjqZdbmNUqKvX0BDmrEZBje81pyTR4TyC72EJcgg'
 api = tradeapi.REST(APCA_API_KEY_ID, APCA_API_SECRET_KEY, APCA_API_BASE_URL, api_version='v2')
 
 # Suppress TensorFlow warnings
 warnings.filterwarnings('ignore', category=UserWarning, message='All PyTorch model weights were used')
 
 # Trading parameters
-STOP_LOSS_PERCENTAGE = 10.0  # 1% stop loss
+STOP_LOSS_PERCENTAGE = 5.0  # 1% stop loss
 TAKE_PROFIT_PERCENTAGE = 0.01  # 1% take profit
-TRADE_AMOUNT = 1000  # Fixed trade amount in USD
+TRADE_AMOUNT = 200  # Fixed trade amount in USD
 CHECK_INTERVAL = 15  # Interval to check and execute trading logic in seconds
 
 #allocated_budget = 1000  # Allocated budget for trading
+
+# Define trading hours (9:30 AM to 4:00 PM ET)
+TRADING_START_TIME = timedelta(hours=9, minutes=30)
+TRADING_END_TIME = timedelta(hours=16)
+
+def check_market_hours():
+    # Get the current time in Eastern Time (ET)
+    eastern = pytz.timezone('US/Eastern')
+    current_time = datetime.now(eastern).time()
+
+    # Convert the current time to a timedelta for comparison
+    current_time_delta = timedelta(hours=current_time.hour, minutes=current_time.minute)
+
+    # Check if the current time is outside of trading hours
+    # if not (TRADING_START_TIME <= current_time_delta <= TRADING_END_TIME):
+    if not (current_time_delta <= TRADING_END_TIME):
+        print("Outside regular trading hours. Terminating script.")
+        log_message("Script terminated: Outside regular trading hours.")
+        sys.exit()  # Terminate the script
 
 def fetch_stock_data(ticker, start_date='2020-01-01'):
     df = yf.download(ticker, start=start_date)
@@ -209,20 +231,31 @@ default_budget = 1000  # Set your default trading budget here
 allocated_budget = load_allocated_budget(default_budget)  # Allocated budget for trading
 print(f"Allocated budget loaded: ${allocated_budget:.2f}")
 
-def update_allocated_budget_with_excess():
+def update_allocated_budget_with_excess(ticker):
     global allocated_budget
 
     try:
-        # Fetch the current cash balance from the Alpaca account
-        account = api.get_account()
-        cash_balance = float(account.cash)  # Get the cash balance as a float
+        # Fetch the account cash buying power (use only cash, not margin)
+        try:
+            account = api.get_account()
+            cash_balance = float(account.cash)  # Get the cash balance as a float
+        except Exception as e:
+            print(f"Error fetching account details: {e}")
+            return
+        
+        # Check if cash balance is above $25,000
+        if cash_balance < CASH_THRESHOLD:
+            print(f"Insufficient cash balance to trade. Current cash balance: ${cash_balance:.2f}")
+            log_message(f"Trade not executed for {ticker}. Cash balance ${cash_balance:.2f} is below the $25,000 threshold.")
+            return
 
         # Check if the cash balance exceeds the defined threshold
         if cash_balance > CASH_THRESHOLD:
             excess_amount = cash_balance - CASH_THRESHOLD
 
             # Cap the excess amount to be added
-            amount_to_add = min(excess_amount, MAX_AMOUNT_TO_ADD)
+            #amount_to_add = min(excess_amount, MAX_AMOUNT_TO_ADD) # Delete this line,  if below line works better 
+            amount_to_add = min(excess_amount, MAX_ALLOCATED_BUDGET - allocated_budget)
 
             # Update the allocated budget by adding the capped amount
             if allocated_budget + amount_to_add <= MAX_ALLOCATED_BUDGET:
@@ -232,14 +265,14 @@ def update_allocated_budget_with_excess():
                 print(f"Excess of ${amount_to_add:.2f} added to allocated budget. New allocated budget: ${allocated_budget:.2f}")
             else:
                 log_message(f"Adding excess amount would exceed max allocated budget. Keeping it at ${MAX_ALLOCATED_BUDGET:.2f}.")
-                allocated_budget = MAX_ALLOCATED_BUDGET
+                #allocated_budget = MAX_ALLOCATED_BUDGET # Delete this line,  if below line works better 
 
         # Save the updated allocated budget to a file
         save_allocated_budget(allocated_budget)
 
     except Exception as e:
-        log_message(f"Error updating allocated budget with excess cash: {e}")
-        print(f"Error updating allocated budget with excess cash: {e}")
+        log_message(f"Error updating allocated budget with excess cash for {ticker}: {e}")
+        print(f"Error updating allocated budget with excess cash for {ticker}: {e}")
 
 # Function to execute an order with proper bracket pricing and budget check (Buy only, no short selling)
 def execute_order(ticker, position_size, limit_price, stop_price, take_profit_price, reason):
@@ -264,6 +297,17 @@ def execute_order(ticker, position_size, limit_price, stop_price, take_profit_pr
         return False
 
     try:
+
+        # Fetch the account cash buying power (use only cash, not margin)
+        account = api.get_account()
+        cash_balance = float(account.cash)
+
+        # Ensure that the cash balance does not drop below $25,000 after the buy order
+        if cash_balance - estimated_order_cost < CASH_THRESHOLD:
+            print(f"Cannot place buy order for {ticker}. Cash balance would drop below $25,000.")
+            log_message(f"Buy order not placed for {ticker}. Cash balance would drop below $25,000.")
+            return False
+        
         # Submit the bracket order, using cash reserves only
         order = api.submit_order(
             symbol=ticker,
@@ -295,12 +339,31 @@ def execute_order(ticker, position_size, limit_price, stop_price, take_profit_pr
         log_message(f"Error placing order for {ticker}: {e}")
         return False  # Order not placed
 
+# Ensure eager execution
+tf.config.run_functions_eagerly(True)
+
+# Enable eager execution for tf.data functions specifically
+tf.data.experimental.enable_debug_mode()
+
+@tf.function(reduce_retracing=True)
+def lstm_predict(model, data):
+    # Check if 'data' is a symbolic tensor and convert to NumPy array if necessary
+    if isinstance(data, tf.Tensor):
+        data = data.numpy()  # Convert to NumPy array if it's a TensorFlow tensor
+    elif not isinstance(data, np.ndarray):  # If not already a NumPy array
+        data = np.array(data)  # Convert to NumPy array
+
+    return model.predict(data)
+
 # Function to apply trading logic
 def trading_logic(ticker):
     global allocated_budget
 
+    # Check if the current time is within trading hours
+    check_market_hours()
+    
     # Update the allocated budget if cash balance exceeds $25,000
-    update_allocated_budget_with_excess()
+    update_allocated_budget_with_excess(ticker)
 
     # Fetch stock data and pre-process it
     stock_data = fetch_stock_data_with_volume_and_trends(ticker)
@@ -324,13 +387,30 @@ def trading_logic(ticker):
     # Predict with each model
     rf_prediction = rf_model.predict(latest_features)
     xgb_prediction = xgb_model.predict(latest_features)
-    lstm_prediction = np.round(lstm_model.predict(latest_features.reshape((latest_features.shape[0], latest_features.shape[1], 1)))).astype(int).flatten()
+    #below code is moved outside the trade logic 
+    #lstm_prediction = np.round(lstm_model.predict(latest_features.reshape((latest_features.shape[0], latest_features.shape[1], 1)))).astype(int).flatten()
+
+    # Ensure consistent input shape and convert to float32 for LSTM model predictions
+    latest_features_lstm = latest_features.reshape((latest_features.shape[0], latest_features.shape[1], 1)).astype(np.float32)
+    
+    # Use the defined lstm_predict function to make predictions
+    lstm_prediction = lstm_predict(lstm_model, latest_features_lstm)
 
     print(f"Model Predictions - RF: {rf_prediction}, XGB: {xgb_prediction}, LSTM: {lstm_prediction}")
 
     # Weighted voting for final prediction
     weights = [0.4, 0.4, 0.2]
-    weighted_predictions = np.bincount([rf_prediction[0], xgb_prediction[0], lstm_prediction[0]], weights=weights)
+
+    # Assuming rf_prediction, xgb_prediction, lstm_prediction, and weights are defined
+    rf_value = rf_prediction[0] if np.isscalar(rf_prediction[0]) else rf_prediction[0].item()
+    xgb_value = xgb_prediction[0] if np.isscalar(xgb_prediction[0]) else xgb_prediction[0].item()
+    lstm_value = lstm_prediction[0] if np.isscalar(lstm_prediction[0]) else lstm_prediction[0].item()
+
+    # weighted_predictions = np.bincount([rf_prediction[0], xgb_prediction[0], lstm_prediction[0]], weights=weights) 
+    weighted_predictions = np.bincount(
+        [rf_value, xgb_value, lstm_value],
+        weights=weights
+    )
     final_prediction = np.argmax(weighted_predictions)
 
     print(f"Final Prediction: {'BUY' if final_prediction == 1 else 'NO ACTION'}")
