@@ -3,7 +3,7 @@ import pandas as pd
 import yfinance as yf
 import schedule
 import time
-from datetime import datetime, timedelta 
+from datetime import datetime, timedelta
 import pytz
 import sys
 from sklearn.ensemble import RandomForestClassifier
@@ -24,6 +24,7 @@ from ta.volatility import AverageTrueRange
 from ta.volume import AccDistIndexIndicator
 from ta.trend import PSARIndicator
 import talib
+import requests
 
 #sh-3.2# cp /Users/mtalend/gitrepo/motradingbot/motradingbot/motradingbot.py .
 #sh-3.2# python3 motradingbot.py --ticker AAPL
@@ -39,10 +40,13 @@ api = tradeapi.REST(APCA_API_KEY_ID, APCA_API_SECRET_KEY, APCA_API_BASE_URL, api
 warnings.filterwarnings('ignore', category=UserWarning, message='All PyTorch model weights were used')
 
 # Trading parameters
-STOP_LOSS_PERCENTAGE = 5.0  # 1% stop loss
+STOP_LOSS_PERCENTAGE = 5.0  # 5% stop loss
 TAKE_PROFIT_PERCENTAGE = 0.01  # 1% take profit
 TRADE_AMOUNT = 200  # Fixed trade amount in USD
 CHECK_INTERVAL = 15  # Interval to check and execute trading logic in seconds
+TARGET_DAILY_PROFIT = 200  # Target profit to stop trading for the day
+
+TRAIL_PERCENT = 0.05  # 5% trailing stop
 
 #allocated_budget = 1000  # Allocated budget for trading
 
@@ -64,6 +68,7 @@ def check_market_hours():
         print("Outside regular trading hours. Terminating script.")
         log_message("Script terminated: Outside regular trading hours.")
         sys.exit()  # Terminate the script
+
 
 def fetch_stock_data(ticker, start_date='2020-01-01'):
     df = yf.download(ticker, start=start_date)
@@ -204,6 +209,65 @@ def fixed_position_sizing(current_price, trade_amount=TRADE_AMOUNT):
     position_size = trade_amount // current_price
     return max(int(position_size), 1)
 
+# Define constants
+TARGET_PORTFOLIO_BALANCE = 27000  # Target portfolio balance threshold
+PROFIT_THRESHOLD = 200  # The amount over the target that triggers sell
+
+# Initialize variables
+daily_profit = 0
+
+# Function to check portfolio balance and trigger profit sell if balance exceeds $27,200
+def check_portfolio_balance_and_sell():
+    global daily_profit
+
+    try:
+        # Fetch the account details
+        account = api.get_account()
+
+        # Check if portfolio balance exceeds $27,200
+        portfolio_value = float(account.portfolio_value)
+        if portfolio_value >= (TARGET_PORTFOLIO_BALANCE + PROFIT_THRESHOLD):
+            print(f"Portfolio balance is ${portfolio_value:.2f}, exceeding target by ${portfolio_value - TARGET_PORTFOLIO_BALANCE:.2f}.")
+            print("Triggering sell for all open positions at profit.")
+
+            # Sell all open positions that are at a profit
+            positions = api.list_positions()
+            for position in positions:
+                ticker = position.symbol
+                qty = int(position.qty)
+                avg_entry_price = float(position.avg_entry_price)
+                current_price = float(position.current_price)
+
+                # Check if the position is profitable
+                if current_price > avg_entry_price:
+                    print(f"Selling {qty} shares of {ticker} at profit. Entry price: ${avg_entry_price:.2f}, Current price: ${current_price:.2f}")
+                    sell_order(ticker, qty)
+                else:
+                    print(f"{ticker} is not profitable. Current price: ${current_price:.2f}, Entry price: ${avg_entry_price:.2f}. No action taken.")
+
+            # Save profit state after selling
+            save_daily_profit()
+
+        else:
+            print(f"Portfolio balance is ${portfolio_value:.2f}, below the sell threshold.")
+    except Exception as e:
+        print(f"Error checking portfolio balance: {e}")
+
+# Function to sell all shares of a given ticker
+def sell_order(ticker, qty):
+    try:
+        # Place a market sell order
+        api.submit_order(
+            symbol=ticker,
+            qty=qty,
+            side='sell',
+            type='market',
+            time_in_force='gtc'
+        )
+        print(f"Successfully placed a market sell order for {qty} shares of {ticker}.")
+    except Exception as e:
+        print(f"Error placing sell order for {ticker}: {e}")
+
 BUDGET_FILE = 'allocated_budget.json'
 
 # Define the maximum allocated budget
@@ -275,8 +339,8 @@ def update_allocated_budget_with_excess(ticker):
         print(f"Error updating allocated budget with excess cash for {ticker}: {e}")
 
 # Function to execute an order with proper bracket pricing and budget check (Buy only, no short selling)
-def execute_order(ticker, position_size, limit_price, stop_price, take_profit_price, reason):
-    global allocated_budget
+def execute_order_with_trailing_stop(ticker, position_size, limit_price, reason):
+    global allocated_budget 
 
     estimated_order_cost = limit_price * position_size
 
@@ -287,14 +351,6 @@ def execute_order(ticker, position_size, limit_price, stop_price, take_profit_pr
     if estimated_order_cost > allocated_budget:
         log_message(f"Cannot place buy order for {ticker}. Estimated cost ${estimated_order_cost:.2f} exceeds allocated budget of ${allocated_budget:.2f}.")
         return False  # Order not placed
-
-    # Adjust take-profit and stop-loss prices
-    take_profit_price = max(take_profit_price, round(limit_price + 0.01, 2))  # Ensure it's above limit price
-    stop_price = min(stop_price, round(limit_price - 0.01, 2))  # Ensure it's below limit price
-
-    if take_profit_price <= stop_price:
-        log_message(f"Error: Take profit price must be greater than stop loss price.")
-        return False
 
     try:
 
@@ -317,12 +373,11 @@ def execute_order(ticker, position_size, limit_price, stop_price, take_profit_pr
             time_in_force='gtc',
             limit_price=round(limit_price, 2),
             order_class='bracket',
-            stop_loss={'stop_price': round(stop_price, 2)},
-            take_profit={'limit_price': round(take_profit_price, 2)},
+            stop_loss={'trail_percent': TRAIL_PERCENT},  # Trailing stop based on 5%
             extended_hours=False  # Ensure it's during regular hours
         )
 
-        log_message(f"Placed buy order for {position_size} shares of {ticker} at limit price ${limit_price:.2f} with stop loss ${stop_price:.2f} and take profit ${take_profit_price:.2f}.")
+        print(f"Placed buy order with trailing stop for {position_size} shares of {ticker}. Limit price: ${limit_price:.2f}, trailing stop: {TRAIL_PERCENT * 100:.2f}%")
 
         # Adjust the allocated budget **only after** the order is successfully placed
         allocated_budget -= estimated_order_cost
@@ -338,6 +393,9 @@ def execute_order(ticker, position_size, limit_price, stop_price, take_profit_pr
         # Log the error and prevent budget changes if the order failed
         log_message(f"Error placing order for {ticker}: {e}")
         return False  # Order not placed
+
+# Check portfolio balance and trigger sell if necessary
+check_portfolio_balance_and_sell()
 
 # Ensure eager execution
 tf.config.run_functions_eagerly(True)
@@ -407,10 +465,7 @@ def trading_logic(ticker):
     lstm_value = lstm_prediction[0] if np.isscalar(lstm_prediction[0]) else lstm_prediction[0].item()
 
     # weighted_predictions = np.bincount([rf_prediction[0], xgb_prediction[0], lstm_prediction[0]], weights=weights) 
-    weighted_predictions = np.bincount(
-        [rf_value, xgb_value, lstm_value],
-        weights=weights
-    )
+    weighted_predictions = np.bincount([rf_value, xgb_value, lstm_value], weights=weights)
     final_prediction = np.argmax(weighted_predictions)
 
     print(f"Final Prediction: {'BUY' if final_prediction == 1 else 'NO ACTION'}")
